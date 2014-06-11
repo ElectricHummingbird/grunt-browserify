@@ -6,17 +6,12 @@
 * Licensed under the MIT license.
 */
 'use strict';
-var Runner = require('../lib/runner');
-var path = require('path');
-var async = require('async');
-var browserify = require('browserify');
-var watchify = require('watchify');
-
-module.exports = Task;
 
 function Task (grunt) {
   grunt.registerMultiTask('browserify', 'Grunt task for browserify.', function () {
     var task = this;
+    var async = require('async');
+
     async.forEachSeries(this.files, function (file, next) {
       Task.runTask(grunt, task.options(), file, next);
     }, this.async());
@@ -24,6 +19,11 @@ function Task (grunt) {
 }
 
 Task.runTask = function (grunt, options, file, next) {
+  var Runner = require('../lib/runner');
+  var path = require('path');
+  var browserify = require('browserify');
+  var watchify = require('watchify');
+
   var runner = new Runner({
     writer: grunt.file,
     logger: grunt,
@@ -35,3 +35,5 @@ Task.runTask = function (grunt, options, file, next) {
   });
   runner.run(files, file.dest, options, next);
 };
+
+module.exports = Task;
